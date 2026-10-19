@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Company details | CareerScope</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
+</head>
+<body>
+	<nav class="nav">
+		<a class="brand" href="/">Career<span>Scope</span></a>
+		<div class="navlinks">
+			<a href="/">Back to directory</a>
+			{% if session.get('user_id') %}
+				<span class="user-greeting">Hi, {{ session.get('user_name') }}</span>
+				<a class="account-action" href="{{ url_for('logout') }}">Log out</a>
+			{% else %}
+				<a class="account-link" href="{{ url_for('login') }}">Log in</a>
+				<a class="account-action" href="{{ url_for('register') }}">Register</a>
+			{% endif %}
+		</div>
+	</nav>
+	<main class="wrap section">
+		{% if company %}
+			<div class="eyebrow dark">COMPANY PROFILE</div>
+			<h1>{{ company.company_name }}</h1>
+			<p>{{ company.industry }} · Listed city: {{ company.city }}</p>
+			<div class="detail-grid">
+				{% for label, value in [('Company rating', company.rating|string+' / 5'), ('Industry', company.industry), ('Employees', company.employees), ('Company type', company.company_type), ('Company age', company.age), ('Locations', company.location), ('Source city', company.city), ('Original dataset fields', company.other_data)] %}
+					<div class="detail-field"><span>{{ label }}</span><strong>{{ value }}</strong></div>
+				{% endfor %}
+			</div>
+			<p><a class="export" href="/">Return to search</a></p>
+		{% else %}
+			<h1>Company not found</h1>
+			<p>The requested record does not exist.</p>
+			<a href="/">Return to directory</a>
+		{% endif %}
+	</main>
+</body>
+</html>
